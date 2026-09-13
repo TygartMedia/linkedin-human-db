@@ -1,26 +1,5 @@
-# Real exports and outputs never belong in the repo.
-# (The synthetic demo zip in sample_data/ is force-added as an exception.)
+will.yaml
 *.zip
-!sample_data/*.zip
-out/
-outputs/
+*connections*.csv
 contacts.json
 contacts.csv
-summary.md
-*_parsed.json
-*_tagged.json
-*_scored.json
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# Editors / OS
-.DS_Store
-.idea/
-.vscode/
