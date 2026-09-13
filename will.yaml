@@ -1,0 +1,49 @@
+# Will's config — the finder-first network.
+#
+# Job 1: find people who can have the conversation, surface a need with a
+# budget, and bring it home. Will closes; the finder gets their cut.
+# Job 2: map the restoration trade by segment (franchise vs independent)
+# so outreach can speak to each differently.
+
+inner_circle:
+  # People Will knows personally. Outsourced finders/outreach never touch
+  # these — this ring is Will's to work directly.
+  - Stefani Tygart
+  - Craig Powers
+  - Marcos Rodriguez
+  - Mitchell Riley
+  - Frank Dobosz
+  - Salman Ayub
+  - Chuck Borden
+  - Robert Huxtable
+  - Craig Gallo
+  - John Hubbard
+  - Jason Sewer
+  - Tammy Biggerstaff
+  - Tim Burdge
+  - Beth Gizzi
+  - Kirk McDonald
+  - Shannon McDonald
+  - Dave Grove
+  - Brooklyn Stenstrom
+  - Don Connell
+  - Rory Pitts
+  - James Bell
+  - Michael Kelley
+  - Carli Tygart
+  - Di Dobosz
+
+wishlist:
+  finder: 3
+  leadership: 2
+  local_services: 2
+  sales: 1
+  outreach: 1
+  insurance: 1
+
+score_weights:
+  capability_fit: 0.6
+  profile_completeness: 0.2
+  recency: 0.2
+
+report_top_n: 20
