@@ -35,6 +35,27 @@ def _compile(capabilities):
     return compiled
 
 
+def tag_inner_circle(records, names):
+    """Tag the owner's warm core by exact name match.
+
+    These are people the owner knows personally. The standing rule:
+    outsourced finders/outreach never touch the inner circle — it is
+    Will's to work directly. Matching is on the normalized full name.
+    """
+    wanted = {n.strip().lower() for n in (names or []) if n.strip()}
+    count = 0
+    for rec in records:
+        if rec.get("name", "").strip().lower() in wanted:
+            if "inner" not in rec["capabilities"]:
+                rec["capabilities"].append("inner")
+                rec["capabilities"].sort()
+            rec.setdefault("capability_evidence", {})["inner"] = [
+                "inner_circle~owner list"
+            ]
+            count += 1
+    return count
+
+
 def tag_records(records, capabilities, search_fields):
     """Add 'capabilities' (list) and 'capability_evidence' (dict) to each record."""
     compiled = _compile(capabilities)
@@ -53,6 +74,12 @@ def tag_records(records, capabilities, search_fields):
             if hits:
                 tags.append(cap)
                 evidence[cap] = hits
+        # Subsumption: every franchise brand in the list is a restoration
+        # company, so a franchise tag implies the trade tag even when the
+        # company name doesn't literally say "restoration".
+        if "restoration_franchise" in tags and "local_services" not in tags:
+            tags.append("local_services")
+            evidence["local_services"] = ["subsumed~restoration_franchise"]
         rec["capabilities"] = sorted(tags)
         rec["capability_evidence"] = evidence
     return records
