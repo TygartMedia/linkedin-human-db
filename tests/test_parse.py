@@ -51,6 +51,37 @@ class TestParse(unittest.TestCase):
         finally:
             os.unlink(zpath)
 
+    def test_skips_notes_preamble(self):
+        # LinkedIn's Basic export prepends a Notes: block before the header.
+        zpath = synthetic.make_export_zip(
+            preamble=[
+                "Notes:",
+                '"When exporting your connection data, you may notice that '
+                'some of the email addresses are missing."',
+                "",
+                "",
+            ]
+        )
+        try:
+            records = parse.parse_export(zpath)
+            self.assertEqual(len(records), len(synthetic.FAKE_CONTACTS))
+            ava = next(r for r in records if r["name"] == "Ava Rivera")
+            self.assertEqual(ava["position"], "Virtual Assistant")
+        finally:
+            os.unlink(zpath)
+
+    def test_notes_marker_without_header_still_refused(self):
+        # A Notes: marker followed by a wrong header is still not official.
+        zpath = synthetic.make_export_zip(
+            header=["Name", "Email", "Stuff"],
+            preamble=["Notes:", "", ""],
+        )
+        try:
+            with self.assertRaises(parse.NotAnOfficialExport):
+                parse.parse_export(zpath)
+        finally:
+            os.unlink(zpath)
+
 
 if __name__ == "__main__":
     unittest.main()
