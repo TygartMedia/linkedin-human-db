@@ -55,6 +55,7 @@ def parse_export(zip_path):
             )
         with z.open(csv_name) as f:
             raw = f.read().decode("utf-8-sig", errors="replace").splitlines()
+    raw = _strip_notes_preamble(raw)
 
     reader = csv.DictReader(raw)
     _check_header(reader.fieldnames, zip_path)
@@ -79,6 +80,22 @@ def parse_export(zip_path):
             }
         )
     return records
+
+
+def _strip_notes_preamble(lines):
+    """Drop LinkedIn's Basic-export Notes: preamble.
+
+    The Basic data export prepends a "Notes:" block (privacy note about
+    email addresses) before the real header. We only skip when the file
+    literally starts with LinkedIn's marker, and we jump straight to the
+    exact expected header line — the strict _check_header validation still
+    runs on whatever comes next, so the official-format guarantee holds.
+    """
+    if lines and lines[0].strip().lower() == "notes:":
+        for i, line in enumerate(lines):
+            if line.startswith("First Name,"):
+                return lines[i:]
+    return lines
 
 
 def _find_connections_csv(names):
