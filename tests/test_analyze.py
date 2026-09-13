@@ -62,6 +62,78 @@ class TestAnalyze(unittest.TestCase):
         self.assertEqual(noah["capabilities"], [])
         self.assertEqual(noah["capability_evidence"], {})
 
+    def test_leadership_tags_titles(self):
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [
+            {"name": "A", "position": "IICRC BoD 2nd Vice President", "company": "IICRC"},
+            {"name": "B", "position": "Chief Executive Officer", "company": "Acme"},
+            {"name": "C", "position": "Owner & Operator", "company": "Acme Restoration"},
+        ]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertIn("leadership", recs[0]["capabilities"])
+        self.assertIn("leadership", recs[1]["capabilities"])
+        self.assertIn("leadership", recs[2]["capabilities"])
+        self.assertIn("operations", recs[2]["capabilities"])  # "operator"
+        self.assertIn("local_services", recs[2]["capabilities"])  # "restoration"
+
+    def test_insurance_and_legal_tagged(self):
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [
+            {"name": "A", "position": "P&C Producer", "company": "USI Insurance Services"},
+            {"name": "B", "position": "General Counsel", "company": "Acme Corp"},
+        ]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertIn("insurance", recs[0]["capabilities"])
+        self.assertIn("legal", recs[1]["capabilities"])
+
+    def test_finder_tags_deal_sourcers(self):
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [
+            {"name": "A", "position": "Business Development Manager", "company": "Acme"},
+            {"name": "B", "position": "Franchise Consultant", "company": "Acme"},
+        ]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertIn("finder", recs[0]["capabilities"])
+        self.assertIn("finder", recs[1]["capabilities"])
+
+    def test_franchise_brands_tagged(self):
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [
+            {"name": "A", "position": "Owner", "company": "SERVPRO of Tacoma"},
+            {"name": "B", "position": "Owner", "company": "Master Restoration LLC"},
+        ]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertIn("restoration_franchise", recs[0]["capabilities"])
+        self.assertNotIn("restoration_franchise", recs[1]["capabilities"])
+        self.assertIn("local_services", recs[1]["capabilities"])
+
+    def test_franchise_implies_restoration_trade(self):
+        # "SERVPRO of Tacoma" never says "restoration", but it IS restoration.
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [{"name": "A", "position": "General Manager", "company": "SERVPRO of Tacoma"}]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertIn("restoration_franchise", recs[0]["capabilities"])
+        self.assertIn("local_services", recs[0]["capabilities"])
+
+    def test_media_in_company_name_is_not_press(self):
+        cfg = config_mod.DEFAULT_CONFIG
+        recs = [{"name": "A", "position": "Co-Owner", "company": "Tygart Media"}]
+        analyze.tag_records(recs, cfg["capabilities"], cfg["search_fields"])
+        self.assertNotIn("press", recs[0]["capabilities"])
+        self.assertIn("leadership", recs[0]["capabilities"])  # "Co-Owner"
+
+    def test_inner_circle_tagged_by_name(self):
+        recs = [
+            {"name": "Stefani Tygart", "position": "Co-Owner", "company": "Tygart Media",
+             "capabilities": [], "capability_evidence": {}},
+            {"name": "Random Person", "position": "Co-Owner", "company": "Acme",
+             "capabilities": [], "capability_evidence": {}},
+        ]
+        n = analyze.tag_inner_circle(recs, ["stefani tygart"])
+        self.assertEqual(n, 1)
+        self.assertIn("inner", recs[0]["capabilities"])
+        self.assertNotIn("inner", recs[1]["capabilities"])
+
 
 if __name__ == "__main__":
     unittest.main()
