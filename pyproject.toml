@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linkedin-human-db"
+version = "0.1.0"
+description = "Turn your LinkedIn data export into a capability database."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+humandb = "humandb.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["humandb"]

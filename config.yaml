@@ -1,0 +1,30 @@
+# humandb config — edit freely. Anything you leave out falls back to the defaults.
+# See README.md for the full docs.
+
+# What you're hunting for right now: capability -> weight (higher = matters more).
+wishlist:
+  admin: 3
+  operations: 2
+  outreach: 2
+  local_services: 1
+
+# How the final score blends. Must sum to 1.
+score_weights:
+  capability_fit: 0.6
+  profile_completeness: 0.2
+  recency: 0.2
+
+# Recency curve: full marks under 365 days, decaying to zero at 10 years.
+recency_full_days: 365
+recency_zero_days: 3650
+
+# How many top contacts land in the summary.
+report_top_n: 20
+
+# Add your own capability -> keywords. These REPLACE the defaults for the
+# capabilities you name; anything you don't name keeps its defaults.
+# capabilities:
+#   drone_pilot:
+#     - "drone pilot"
+#     - "UAV operator"
+#     - "Part 107"
