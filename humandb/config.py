@@ -14,6 +14,7 @@ DEFAULT_CAPABILITIES = {
     "operations": [
         "operations", "project manager", "program manager", "COO",
         "chief operating", "logistics", "supply chain", "process improvement",
+        "operator",
     ],
     "outreach": [
         "outreach", "business development", "partnerships", "partner manager",
@@ -37,7 +38,7 @@ DEFAULT_CAPABILITIES = {
         "human resources", "staffing",
     ],
     "press": [
-        "journalist", "reporter", "editor", "media", "public relations",
+        "journalist", "reporter", "editor", "public relations",
         "communications", "podcast host", "blogger",
     ],
     "technical": [
@@ -48,12 +49,44 @@ DEFAULT_CAPABILITIES = {
         "designer", "writer", "copywriter", "marketing", "content",
         "brand", "video", "photographer", "social media",
     ],
+    "leadership": [
+        "CEO", "chief executive", "president", "vice president",
+        "founder", "co-founder", "cofounder", "owner", "chairman",
+        "managing director", "managing partner", "board member",
+    ],
+    "insurance": [
+        "insurance", "underwriter", "claims adjuster", "p&c",
+        "insurance producer", "insurance broker", "risk manager",
+        "actuary",
+    ],
+    "legal": [
+        "attorney", "lawyer", "counsel", "paralegal", "law firm",
+        "general counsel",
+    ],
+    "finder": [
+        # People whose job is having conversations and surfacing needs:
+        # they bring problems with budgets; you close.
+        "business development", "partnerships", "community manager",
+        "evangelist", "business broker", "franchise consultant",
+        "affiliate manager", "channel manager",
+    ],
+    "restoration_franchise": [
+        # Franchise brands inside the restoration trade. Anyone tagged
+        # `local_services` but NOT this is treated as independent.
+        "servpro", "belfor", "puroclean", "rainbow international",
+        "paul davis", "1-800 water damage", "servicemaster",
+        "ati restoration", "first onsite", "dki", "advantaclean",
+        "911 restoration", "lightspeed restoration", "voda cleaning",
+    ],
 }
 
 DEFAULT_CONFIG = {
     "capabilities": copy.deepcopy(DEFAULT_CAPABILITIES),
     # Fields searched for capability keywords, in order.
     "search_fields": ["position", "company"],
+    # People the owner knows personally (exact full names). They get the
+    # "inner" tag; outsourced outreach must never touch them.
+    "inner_circle": [],
     # What you're looking for right now: capability -> weight (higher = matters more).
     "wishlist": {
         "admin": 3,
