@@ -91,6 +91,9 @@ def cmd_run(args):
     analyze.tag_records(records, cfg["capabilities"], cfg["search_fields"])
     tagged = sum(1 for r in records if r.get("capabilities"))
     print(f"analyze: tagged {tagged}/{len(records)} contacts")
+    inner = analyze.tag_inner_circle(records, cfg.get("inner_circle", []))
+    if inner:
+        print(f"analyze: inner circle: {inner} contacts")
 
     enricher = NoOpEnricher()  # plug your own CapabilityEnricher here (see llm_plugin.py)
     records = enricher.enrich(records, cfg["capabilities"])
