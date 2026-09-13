@@ -1,0 +1,13 @@
+# Example personal config — copy to will.yaml and fill in your own.
+# NEVER commit your real will.yaml (it's gitignored).
+weights:
+  finder: 3
+  leadership: 2
+  local_services: 2
+  sales: 1
+  outreach: 1
+  insurance: 1
+inner_circle:
+  # exact full names, one per line — people who must never get outsourced outreach
+  - "Jane Example"
+  - "John Sample"
