@@ -55,12 +55,19 @@ FAKE_CONTACTS = [
 ]
 
 
-def make_export_zip(path=None, contacts=FAKE_CONTACTS, header=HEADER):
-    """Write a fake LinkedIn export zip. Returns the zip path."""
+def make_export_zip(path=None, contacts=FAKE_CONTACTS, header=HEADER, preamble=None):
+    """Write a fake LinkedIn export zip. Returns the zip path.
+
+    preamble: optional list of lines written before the header, mimicking
+    LinkedIn's Basic-export Notes: block.
+    """
     if path is None:
         fd, path = tempfile.mkstemp(suffix=".zip")
         os.close(fd)
     buf = io.StringIO()
+    if preamble:
+        for line in preamble:
+            buf.write(line + "\n")
     writer = csv.writer(buf)
     writer.writerow(header)
     for c in contacts:
